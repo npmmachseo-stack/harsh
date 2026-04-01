@@ -1,0 +1,129 @@
+name: Build All Apps
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  build-android-phone:
+    name: Android Phone APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Generate Gradle wrapper
+        run: |
+          cat > gradle-wrapper-gen.gradle << 'SCRIPT'
+          wrapper {
+              gradleVersion = '8.2'
+          }
+          SCRIPT
+          gradle -b gradle-wrapper-gen.gradle wrapper
+          chmod +x gradlew
+          rm gradle-wrapper-gen.gradle
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTKeyboardSender.apk
+          path: android-app/app/build/outputs/apk/debug/*.apk
+
+  build-android-tv:
+    name: Android TV APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tv-apps/android-tv
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Generate Gradle wrapper
+        run: |
+          cat > gradle-wrapper-gen.gradle << 'SCRIPT'
+          wrapper {
+              gradleVersion = '8.2'
+          }
+          SCRIPT
+          gradle -b gradle-wrapper-gen.gradle wrapper
+          chmod +x gradlew
+          rm gradle-wrapper-gen.gradle
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTKeyboardTV.apk
+          path: tv-apps/android-tv/app/build/outputs/apk/debug/*.apk
+
+  build-fire-tv:
+    name: Fire TV APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tv-apps/amazon-firetv
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Generate Gradle wrapper
+        run: |
+          cat > gradle-wrapper-gen.gradle << 'SCRIPT'
+          wrapper {
+              gradleVersion = '8.2'
+          }
+          SCRIPT
+          gradle -b gradle-wrapper-gen.gradle wrapper
+          chmod +x gradlew
+          rm gradle-wrapper-gen.gradle
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTKeyboardFireTV.apk
+          path: tv-apps/amazon-firetv/app/build/outputs/apk/debug/*.apk
+
+  build-windows-exe:
+    name: Windows Receiver EXE
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build EXE
+        run: |
+          pip install pyinstaller
+          pyinstaller --onefile --name BTKeyboardReceiver --noconsole desktop-receiver/receiver_wifi.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BTKeyboardReceiver.exe
+          path: dist/BTKeyboardReceiver.exe
+
+  build-linux-binary:
+    name: Linux Receiver Binary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build binary
+        run: |
+          pip install pyinstaller
+          pyinstaller --onefile --name bt-keyboard-receiver desktop-receiver/receiver_wifi.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bt-keyboard-receiver-linux
+          path: dist/bt-keyboard-receiver
