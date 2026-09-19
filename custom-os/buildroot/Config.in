@@ -1,0 +1,1 @@
+source "$BR2_EXTERNAL_BTKEYBOARD_PATH/package/btkeyboard-receiver/Config.in"
