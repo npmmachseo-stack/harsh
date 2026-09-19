@@ -1,0 +1,12 @@
+config BR2_PACKAGE_BTKEYBOARD_RECEIVER
+	bool "btkeyboard-receiver"
+	default y
+	select BR2_PACKAGE_PYTHON3
+	select BR2_PACKAGE_PYTHON_EVDEV
+	help
+	  BT Keyboard appliance receiver daemon. Listens on TCP :9876 for
+	  newline-delimited JSON keystroke messages sent by the BT Keyboard
+	  Android app, and injects them into whatever has focus via
+	  /dev/uinput. Started at boot by /etc/init.d/S99btkeyboard.
+
+	  See custom-os/receiver in the harsh repository.

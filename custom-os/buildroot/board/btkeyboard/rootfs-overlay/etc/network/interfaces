@@ -1,0 +1,12 @@
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+
+# For Wi-Fi: enable BR2_PACKAGE_WPA_SUPPLICANT in menuconfig, drop your
+# network's config at /etc/wpa_supplicant.conf in this overlay, then add:
+#
+# auto wlan0
+# iface wlan0 inet dhcp
+#     wpa-conf /etc/wpa_supplicant.conf

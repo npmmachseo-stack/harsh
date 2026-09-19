@@ -1,0 +1,21 @@
+# Config fragment layered on top of a stock Buildroot board defconfig
+# (e.g. qemu_x86_64_defconfig, raspberrypi4_64_defconfig) via
+# support/kconfig/merge_config.sh. See custom-os/build.sh.
+#
+# Keeping this as a small fragment instead of a full hand-written
+# defconfig means all the board/arch-specific bits (kernel config,
+# bootloader, firmware, partition layout) stay exactly as upstream
+# Buildroot maintains them for that board.
+
+BR2_TARGET_GENERIC_HOSTNAME="btkeyboard"
+BR2_TARGET_GENERIC_ISSUE="BT Keyboard Appliance"
+BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL_BTKEYBOARD_PATH)/board/btkeyboard/rootfs-overlay"
+
+# DHCP on eth0 via board/btkeyboard/rootfs-overlay/etc/network/interfaces
+BR2_PACKAGE_IFUPDOWN_SCRIPTS=y
+
+BR2_PACKAGE_PYTHON3=y
+BR2_PACKAGE_PYTHON_EVDEV=y
+
+# Our package, from this external tree (package/btkeyboard-receiver)
+BR2_PACKAGE_BTKEYBOARD_RECEIVER=y

@@ -21,3 +21,10 @@ Go to **[Actions](../../actions)** tab → click latest green build → scroll d
 2. Open the sender app on your phone
 3. Enter the PC/TV's IP address
 4. Start typing in any language!
+
+## Custom appliance OS
+
+Don't want to run the receiver on top of a full desktop OS? See
+[`custom-os/`](custom-os) — a Buildroot-based minimal Linux image that
+boots a PC, mini-PC, or Raspberry Pi straight into the BT Keyboard
+receiver, no desktop environment required.
